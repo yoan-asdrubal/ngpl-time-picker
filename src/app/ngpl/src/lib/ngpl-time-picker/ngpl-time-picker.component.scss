@@ -1,0 +1,33 @@
+.time-picker-content {
+  background-color: white;
+  width: 120px;
+  & > div {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    &.input-row {
+      margin-top: 8px;
+      mat-form-field {
+        width: 25px;
+        font-size: 20px;
+      }
+
+      input {
+        text-align: center;
+      }
+    }
+
+    &.icon-row {
+      height: 40px;
+
+      .mat-icon {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.widget-time-picker-mat-form-field {
+  width: 100%;
+}

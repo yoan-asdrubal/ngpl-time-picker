@@ -1,0 +1,83 @@
+<section>
+  <h1>NGPL DATE PICKER</h1>
+  <div>
+    <mat-checkbox [formControl]="disableControl" class="mr-3">
+      Disable Control
+    </mat-checkbox>
+    <mat-checkbox [formControl]="readOnlyControl" class="mr-3">
+      ReadOnly Control
+    </mat-checkbox>
+    <mat-checkbox [formControl]="loadingControl" class="mr-3">
+      Show Loading
+    </mat-checkbox>
+  </div>
+  <form [formGroup]="formGroup" fxLayout="column">
+    <div fxLayout fxLayoutAlign="space-around">
+      <ngpl-time-picker
+        [ngplDisableControl]="disableControl.value"
+        [readOnlyControl]="readOnlyControl.value"
+        [showLoading]="loadingControl.value"
+        formControlName="timepicker"
+        ngplWidth="250px"
+        placeHolder="Time Picker 1">
+
+      </ngpl-time-picker>
+
+      <ngpl-time-picker
+        [ngplDisableControl]="disableControl.value"
+        [readOnlyControl]="readOnlyControl.value"
+        [showLoading]="loadingControl.value"
+        formControlName="timepicker1"
+        ngplWidth="250px"
+        placeHolder="Time Picker 2">
+
+      </ngpl-time-picker>
+      <ngpl-time-picker
+        [readOnlyControl]="readOnlyControl.value"
+        [showLoading]="loadingControl.value"
+        formControlName="timepicker2"
+        ngplWidth="250px"
+        placeHolder="Time Picker">
+
+      </ngpl-time-picker>
+
+    </div>
+    <div fxLayout fxLayoutAlign="space-around">
+      <ngpl-time-picker
+        [ngplDisableControl]="disableControl.value"
+        [readOnlyControl]="readOnlyControl.value"
+        [showLoading]="loadingControl.value"
+        formControlName="timepicker3"
+        ngplWidth="250px"
+        placeHolder="Time Picker">
+
+      </ngpl-time-picker>
+      <ngpl-time-picker
+        [ngplDisableControl]="disableControl.value"
+        [readOnlyControl]="readOnlyControl.value"
+        [showLoading]="loadingControl.value"
+        formControlName="timepicker4"
+        ngplWidth="250px"
+        placeHolder="Time Picker">
+
+      </ngpl-time-picker>
+      <ngpl-time-picker
+        [readOnlyControl]="readOnlyControl.value"
+        [showLoading]="loadingControl.value"
+        formControlName="timepicker5"
+        ngplWidth="250px"
+        placeHolder="Time Picker">
+
+      </ngpl-time-picker>
+
+    </div>
+
+  </form>
+
+  <div fxLayout="" fxLayoutAlign="space-around">
+    <pre>{{formGroup.value | json}}</pre>
+    <pre>{{formGroup.getRawValue() | json}}</pre>
+  </div>
+
+
+</section>
