@@ -8,6 +8,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {NgplCommonDirectivesModule, NgplCommonModule} from 'ngpl-common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NgplTimePickerComponent} from './ngpl-time-picker/ngpl-time-picker.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 const components = [
   NgplTimePickerComponent
@@ -23,6 +24,7 @@ const components = [
     ReactiveFormsModule,
     MatIconModule,
     MatDatepickerModule,
+    MatTooltipModule,
     OverlayModule,
     NgplCommonModule,
     NgplCommonDirectivesModule

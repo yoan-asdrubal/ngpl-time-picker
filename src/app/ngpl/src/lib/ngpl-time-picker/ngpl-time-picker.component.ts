@@ -1,9 +1,11 @@
 /* tslint:disable */
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   forwardRef,
+  Injector,
   Input,
   OnDestroy,
   OnInit,
@@ -14,10 +16,11 @@ import {
 } from '@angular/core';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {CdkOverlayOrigin, Overlay, OverlayPositionBuilder, OverlayRef} from '@angular/cdk/overlay';
-import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, NgControl, Validators} from '@angular/forms';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
-import {startWith, tap} from 'rxjs/operators';
+import {debounceTime, startWith, take, tap} from 'rxjs/operators';
 import {completeFullValueLess10, NGPL_FILTER_BASE, NgplAutofocusDirective, NgplFilterBase} from 'ngpl-common';
+import {timer} from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -54,19 +57,8 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
   /**
    * Define el atributo appearance del matFormField, permite los mismos valores
    */
-  @Input() appearance:'legacy' | 'standard' | 'fill' | 'outline' | 'default' = 'outline';
+  @Input() appearance: 'legacy' | 'standard' | 'fill' | 'outline' | 'default' = 'outline';
 
-  /**
-   *  Define si se aplica la clase no-empty al matFormField
-   */
-  @Input() outlineAlways = false;
-
-  /**
-   *  Define si se le aplica la case hide-theme-color al matFormField
-   */
-  @Input() hideThemeColorClass = true;
-
-  @Input() hideOutlineWhenValue = true;
   /**
    * Controla si el componenten debe mostrar un Skeleton
    */
@@ -83,9 +75,6 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
 
   @Input() readOnlyControl = false;
 
-
-  @Input() noPadding = false;
-
   @Input() iconPreffix: string;
 
   @Input() iconSuffix: string;
@@ -96,16 +85,24 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
   @Input() mmStep = 5;
 
   timePickerControl = new FormControl();
-  timeHHControl = new FormControl(new Date().getHours(), [Validators.required, Validators.min(0), Validators.max(23)]);
-  timeMMControl = new FormControl(new Date().getMinutes(), [Validators.required, Validators.min(0), Validators.max(59)]);
+  timeHHControl = new FormControl(null, [Validators.required, Validators.min(0), Validators.max(23)]);
+  timeMMControl = new FormControl(null, [Validators.required, Validators.min(0), Validators.max(59)]);
+
+  ngControl: NgControl;
 
   constructor(private overlay: Overlay,
               private formB: FormBuilder,
+              private injector: Injector,
+              private changeDetectorRef: ChangeDetectorRef,
               private overlayPositionBuilder: OverlayPositionBuilder,
               private _viewContainerRef: ViewContainerRef) {
+
   }
 
+
   ngOnInit(): void {
+    this.ngControl = this.injector.get(NgControl, null, 2);
+    // console.log({'this.ngControl': this.ngControl});
 
     this.timeHHControl
       .valueChanges
@@ -113,10 +110,7 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
         untilDestroyed(this),
         startWith(this.timeHHControl.value),
         tap(value => {
-          if (this.timeHHControl.valid) {
-            this.calcTimePickerValue();
-          }
-
+          this.calcTimePickerValue();
         })
       )
       .subscribe();
@@ -126,9 +120,7 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
         untilDestroyed(this),
         startWith(this.timeMMControl.value),
         tap(value => {
-          if (this.timeMMControl.valid) {
-            this.calcTimePickerValue();
-          }
+          this.calcTimePickerValue();
         })
       )
       .subscribe();
@@ -138,11 +130,9 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
       .pipe(
         // startWith(`${this.autocompleteValueLess10(new Date().getHours())}:${this.autocompleteValueLess10(new Date().getMinutes())}`),
         tap(value => {
-          // console.log('timePickerControl value', value);
-          if (this.timePickerControl.valid) {
-            this.onChange(value);
-            this.onTouch(value);
-          }
+          this.onChange(value);
+          this.onTouch(value);
+          this.changeDetectorRef.markForCheck();
         })
       )
       .subscribe();
@@ -171,7 +161,7 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
     });
     this.overlayRef.backdropClick()
       .pipe(
-        untilDestroyed(this),
+        untilDestroyed(this)
       )
       .subscribe(() => {
         this.overlayRef.detach();
@@ -179,16 +169,18 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
   }
 
   openPanelWithBackdrop(event): void {
+
     event.stopPropagation();
     event.preventDefault();
-    if(this.disabledControl || this.readOnlyControl)
+    if (this.disabledControl || this.readOnlyControl || !!this.showLoading) {
       return;
+    }
     this.overlayRef.attach(new TemplatePortal(
       this.templatePortalContent,
       this._viewContainerRef));
     // console.log('this.autofocus', this.autofocus);
     if (!!this.autofocus) {
-      this.autofocus.onFocus();
+      // this.autofocus.onFocus();
     }
   }
 
@@ -208,28 +200,64 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
     this.onTouch = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void{
-  this.disabledControl = isDisabled;
+  setDisabledState(isDisabled: boolean): void {
+    this.disabledControl = isDisabled;
   }
 
-  writeValue(obj: string): void {
-    // console.log('writeValue', obj);
+  writeValue(obj: string | Date): void {
+
     if (!obj) {
-      this.calcTimePickerValue();
-    } else {
-      if (typeof obj === 'string') {
-        const values = obj.split(':');
-        if (values.length !== 2) {
-          throw new Error('Error con valores por defecto para la hora');
-        }
+      this.timeHHControl.setValue(null);
+      this.timeMMControl.setValue(null);
+      return;
+    }
+    if (typeof obj === 'string') {
+      const values = obj.split(':');
+      if (values.length !== 2) {
+        throw new Error('Error con valores por defecto para la hora');
+      }
+      if (+values[0] >= 0 && +values[0] < 24) {
         this.timeHHControl.setValue(completeFullValueLess10(+values[0]));
+      }
+      if (+values[1] >= 0 && +values[1] < 60) {
         this.timeMMControl.setValue(completeFullValueLess10(+values[1]));
       }
     }
+    // setTimeout(() => console.log('writevalue', this.ngControl.control, obj, {
+    //   mmValue: this.timeMMControl.value,
+    //   mmStatus: this.timeMMControl.status,
+    //   hhValue: this.timeHHControl.value,
+    //   hhStatus: this.timeHHControl.status
+    // }), 10);
+
+    if (this.timeMMControl.invalid || this.timeHHControl.invalid) {
+
+      this.timePickerControl.setValue(null);
+      timer()
+        .pipe(
+          take(1),
+          debounceTime(10),
+          tap(() => {
+            if (!!this.ngControl.control) {
+              this.ngControl.control.setValue(null);
+            }
+            this.changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe();
+
+    }
+
   }
 
   calcTimePickerValue(): void {
-    this.timePickerControl.setValue(`${completeFullValueLess10(+this.timeHHControl.value)}:${completeFullValueLess10(+this.timeMMControl.value)}`);
+    if (this.timeHHControl.valid && this.timeMMControl.valid) {
+      this.timePickerControl.setValue(`${completeFullValueLess10(+this.timeHHControl.value)}:${completeFullValueLess10(+this.timeMMControl.value)}`);
+    } else {
+      this.timePickerControl.setValue(null);
+      this.onChange(null);
+      this.onTouch(null);
+    }
   }
 
 
@@ -240,7 +268,7 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
     } else if (value > 23) {
       this.timeHHControl.setValue(completeFullValueLess10(value % 23));
     } else if (!value) {
-      this.timeHHControl.setValue(completeFullValueLess10(new Date().getHours()));
+      this.timeHHControl.setValue(null);
     }
 
   }
@@ -252,7 +280,7 @@ export class NgplTimePickerComponent implements OnInit, OnDestroy, NgplFilterBas
     } else if (value > 59) {
       this.timeMMControl.setValue(completeFullValueLess10(value % 59));
     } else if (!value) {
-      this.timeMMControl.setValue(completeFullValueLess10(new Date().getMinutes()));
+      this.timeMMControl.setValue(null);
     }
   }
 

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {currentTimeStringFormatted} from 'ngpl-common';
 
 @Component({
   selector: 'ngpl-time-picker-test',
@@ -19,12 +20,12 @@ export class NgplTimePickerTestComponent implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = this._formB.group({
-      timepicker: [],
-      timepicker1: [],
-      timepicker2: [],
-      timepicker3: [],
-      timepicker4: [],
-      timepicker5: []
+      timepicker: [null],
+      timepicker1: [currentTimeStringFormatted()],
+      timepicker2: ['20:40'],
+      timepicker3: ['40:40'],
+      timepicker4: ['20:80'],
+      timepicker5: ['0:0']
 
     });
 

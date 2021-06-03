@@ -1,5 +1,4 @@
 <section>
-  <h1>NGPL DATE PICKER</h1>
   <div>
     <mat-checkbox [formControl]="disableControl" class="mr-3">
       Disable Control
@@ -17,6 +16,7 @@
         [ngplDisableControl]="disableControl.value"
         [readOnlyControl]="readOnlyControl.value"
         [showLoading]="loadingControl.value"
+
         formControlName="timepicker"
         ngplWidth="250px"
         placeHolder="Time Picker 1">

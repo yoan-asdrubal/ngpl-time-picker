@@ -4,67 +4,67 @@
                 [floatLabel]="showLoading ? 'always' : floatLabel"
                 [appearance]="appearance"
 >
-    <mat-label>{{  placeHolder}}</mat-label>
+  <mat-label>{{  placeHolder}}</mat-label>
 
-    <ngpl-skeleton [width]="showLoadingWidth" [height]="showLoadingHeight" [isLoading]="showLoading">
-        <input (click)="openPanelWithBackdrop($event)" matInput ngDefaultControl
-               class="pointer"
-               [ngplDisableControl]="disabledControl"
-               [readOnly]="readOnlyControl"
-               readonly
-               [autocomplete]="autocomplete"
-               [formControl]="timePickerControl">
-    </ngpl-skeleton>
-    <mat-icon matPrefix *ngIf="!!iconPreffix">{{iconPreffix}}</mat-icon>
-    <mat-icon matSuffix *ngIf="!!iconSuffix">{{iconSuffix}}</mat-icon>
+  <ngpl-skeleton [width]="showLoadingWidth" [height]="showLoadingHeight" [isLoading]="showLoading">
+    <input (click)="openPanelWithBackdrop($event)" matInput ngDefaultControl
+           class="pointer"
+           [ngplDisableControl]="disabledControl"
+           [readOnly]="readOnlyControl"
+           readonly
+           [autocomplete]="autocomplete"
+           [formControl]="timePickerControl">
+  </ngpl-skeleton>
+  <mat-icon matPrefix *ngIf="!!iconPreffix">{{iconPreffix}}</mat-icon>
+  <mat-icon matSuffix *ngIf="!!iconSuffix">{{iconSuffix}}</mat-icon>
 </mat-form-field>
 <div cdkOverlayOrigin></div>
 
 <ng-template #templatePortalContent>
-    <div class="mat-elevation-z8 time-picker-content" >
-        <div class="icon-row">
-            <mat-icon class="mat-18" (click)="modifyHH(1)"
-                      [matTooltip]="'+ '+hhStep+ 'hora'" matTooltipPosition="left">keyboard_arrow_up
-            </mat-icon>
-            <mat-icon class="mat-18" (click)="modifyMM(1)"
-                      [matTooltip]="'+ '+mmStep+ ' minutos'" matTooltipPosition="right">keyboard_arrow_up
-            </mat-icon>
-        </div>
-        <div class="input-row">
-            <mat-form-field floatLabel="auto" class="shrink-bottom bb-1">
-                <mat-label>HH</mat-label>
-
-                <input matInput ngDefaultControl [dfAutoFocus]="false"
-                       (blur)="checkHours()"
-                       skipValidation
-                       autocomplete="off"
-                       [formControl]="timeHHControl">
-
-            </mat-form-field>
-            <mat-form-field floatLabel="auto" class="shrink-bottom bb-1">
-                <mat-label>MM</mat-label>
-
-                <input matInput ngDefaultControl
-                       (blur)="checkMinutes()"
-                       skipValidation
-                       autocomplete="off"
-                       [formControl]="timeMMControl">
-
-            </mat-form-field>
-        </div>
-        <div class="icon-row">
-            <mat-icon class="mat-18" (click)="modifyHH(-1)"
-                      [matTooltip]="'- '+hhStep+ ' hora'"
-                      matTooltipPosition="left"
-            >keyboard_arrow_down
-            </mat-icon>
-            <mat-icon class="mat-18" (click)="modifyMM(-1)"
-                      [matTooltip]="'- '+mmStep+ ' minutos'"
-                      matTooltipPosition="right"
-            >keyboard_arrow_down
-            </mat-icon>
-        </div>
+  <div class="mat-elevation-z8 time-picker-content">
+    <div class="icon-row">
+      <mat-icon class="mat-18" (click)="modifyHH(1)"
+                [matTooltip]="'+ '+hhStep+ ' hora'" matTooltipPosition="left">keyboard_arrow_up
+      </mat-icon>
+      <mat-icon class="mat-18" (click)="modifyMM(1)"
+                [matTooltip]="'+ '+mmStep+ ' minutos'" matTooltipPosition="right">keyboard_arrow_up
+      </mat-icon>
     </div>
+    <div class="input-row">
+      <mat-form-field floatLabel="auto" class="shrink-bottom bb-1">
+        <mat-label>HH</mat-label>
+
+        <input matInput ngDefaultControl
+               (blur)="checkHours()"
+               skipValidation
+               autocomplete="off"
+               [formControl]="timeHHControl">
+
+      </mat-form-field>
+      <mat-form-field floatLabel="auto" class="shrink-bottom bb-1">
+        <mat-label>MM</mat-label>
+
+        <input matInput ngDefaultControl
+               (blur)="checkMinutes()"
+               skipValidation
+               autocomplete="off"
+               [formControl]="timeMMControl">
+
+      </mat-form-field>
+    </div>
+    <div class="icon-row">
+      <mat-icon class="mat-18" (click)="modifyHH(-1)"
+                [matTooltip]="'- '+hhStep+ ' hora'"
+                matTooltipPosition="left"
+      >keyboard_arrow_down
+      </mat-icon>
+      <mat-icon class="mat-18" (click)="modifyMM(-1)"
+                [matTooltip]="'- '+mmStep+ ' minutos'"
+                matTooltipPosition="right"
+      >keyboard_arrow_down
+      </mat-icon>
+    </div>
+  </div>
 
 </ng-template>
 
