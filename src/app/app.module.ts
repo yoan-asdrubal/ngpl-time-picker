@@ -28,6 +28,7 @@ import {NgplTimePickerTestComponent} from './app-test/ngpl-time-picker-test/ngpl
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgplCommonModule} from 'ngpl-common';
 import {NgplTimePickerModule} from './ngpl/src/lib';
+import {NgplFilterModule} from 'ngpl-filter';
 // import 'ngpl-common/lib/ngpl-interfaces/string.interface';
 // import 'ngpl-common/lib/ngpl-interfaces/object.interface';
 
@@ -67,6 +68,7 @@ const materialModules = [
     ReactiveFormsModule,
     materialModules,
     NgplCommonModule,
+    NgplFilterModule,
     NgplTimePickerModule
   ],
   providers: [{

@@ -19,8 +19,9 @@ import {CdkOverlayOrigin, Overlay, OverlayPositionBuilder, OverlayRef} from '@an
 import {ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR, NgControl, Validators} from '@angular/forms';
 import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
 import {debounceTime, startWith, take, tap} from 'rxjs/operators';
-import {completeFullValueLess10, NGPL_FILTER_BASE, NgplAutofocusDirective, NgplFilterBase} from 'ngpl-common';
+import {completeFullValueLess10} from 'ngpl-common';
 import {timer} from 'rxjs';
+import {NGPL_FILTER_BASE, NgplAutofocusDirective, NgplFilterBase} from 'ngpl-filter';
 
 @UntilDestroy()
 @Component({

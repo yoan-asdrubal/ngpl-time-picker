@@ -9,6 +9,7 @@ import {NgplCommonDirectivesModule, NgplCommonModule} from 'ngpl-common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {NgplTimePickerComponent} from './ngpl-time-picker/ngpl-time-picker.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {NgplFilterModule} from 'ngpl-filter';
 
 const components = [
   NgplTimePickerComponent
@@ -27,6 +28,7 @@ const components = [
     MatTooltipModule,
     OverlayModule,
     NgplCommonModule,
+    NgplFilterModule,
     NgplCommonDirectivesModule
   ]
 })
