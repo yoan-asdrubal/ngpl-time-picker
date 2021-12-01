@@ -32,10 +32,10 @@
     "@angular/router": "~11.0.5",
     "@ngneat/until-destroy": "^8.0.3",
     "moment": "^2.29.1",
-    "ngpl-common": "^2.0.26",
-    "ngpl-filter": "^1.0.6",
+    "ngpl-common": "^2.0.33",
+    "ngpl-filter": "^1.0.7",
     "ngx-reactivetoolkit": "^8.0.2",
-    "rxjs": "~6.6.0",
+    "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },

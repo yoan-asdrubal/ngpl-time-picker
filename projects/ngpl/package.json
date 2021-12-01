@@ -1,9 +1,9 @@
 {
   "name": "ngpl-time-picker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "peerDependencies": {},
   "dependencies": {
     "tslib": "^2.0.0",
-    "ngpl-common": "^2.0.15"
+    "ngpl-common": "^2.0.33"
   }
 }
